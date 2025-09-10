@@ -114,6 +114,10 @@ export function CityGenerator() {
       }>;
       isHighway: boolean;
     }>;
+    connectionPoints?: Array<{
+      point: Point;
+      isIntersection: boolean;
+    }>;
   };
   
   const [unifiedRoadNetwork, setUnifiedRoadNetwork] = useState<UnifiedRoadNetwork | null>(null);
