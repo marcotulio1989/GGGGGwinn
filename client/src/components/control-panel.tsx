@@ -56,105 +56,101 @@ const presets: CityPreset[] = [
   }
 ];
 
-export function ControlPanel({ 
-  parameters, 
-  onParameterChange, 
-  onPresetSelect, 
+const sliderConfigs: Array<{
+  key: keyof CityParameters;
+  label: string;
+  min: number;
+  max: number;
+  step?: number;
+  testId: string;
+  left: string;
+  right: string;
+}> = [
+  {
+    key: 'citySize',
+    label: 'City Size',
+    min: 50,
+    max: 200,
+    testId: 'slider-city-size',
+    left: 'Small',
+    right: 'Large',
+  },
+  {
+    key: 'buildingDensity',
+    label: 'Building Density',
+    min: 0.3,
+    max: 1.0,
+    step: 0.1,
+    testId: 'slider-building-density',
+    left: 'Sparse',
+    right: 'Dense',
+  },
+  {
+    key: 'buildingHeight',
+    label: 'Building Height',
+    min: 20,
+    max: 150,
+    testId: 'slider-building-height',
+    left: 'Low',
+    right: 'Skyscrapers',
+  },
+  {
+    key: 'streetWidth',
+    label: 'Street Width',
+    min: 8,
+    max: 24,
+    testId: 'slider-street-width',
+    left: 'Narrow',
+    right: 'Wide',
+  },
+  {
+    key: 'variation',
+    label: 'Variation',
+    min: 0,
+    max: 100,
+    testId: 'slider-variation',
+    left: 'Uniform',
+    right: 'Chaotic',
+  },
+];
+
+export function ControlPanel({
+  parameters,
+  onParameterChange,
+  onPresetSelect,
   onGenerateCity,
-  buildingCount 
+  buildingCount
 }: ControlPanelProps) {
+  const handleChange = (key: keyof CityParameters) =>
+    (e: React.ChangeEvent<HTMLInputElement>) =>
+      onParameterChange(key, Number(e.target.value));
+
   return (
     <div className="absolute left-4 top-20 bottom-4 w-80 z-30 floating-panel">
       <div className="glass-panel rounded-lg p-6 h-full overflow-y-auto">
         <h2 className="text-lg font-semibold mb-6 text-primary">City Parameters</h2>
-        
+
         {/* Generation Controls */}
         <div className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium mb-3 text-foreground">City Size</label>
-            <input 
-              type="range" 
-              min="50" 
-              max="200" 
-              value={parameters.citySize}
-              onChange={(e) => onParameterChange('citySize', Number(e.target.value))}
-              className="w-full slider-thumb bg-muted rounded-lg appearance-none h-2" 
-              data-testid="slider-city-size"
-            />
-            <div className="flex justify-between text-xs text-muted-foreground mt-1">
-              <span>Small</span>
-              <span>Large</span>
+          {sliderConfigs.map(({ key, label, min, max, step, testId, left, right }) => (
+            <div key={key as string}>
+              <label className="block text-sm font-medium mb-3 text-foreground">{label}</label>
+              <input
+                type="range"
+                min={min}
+                max={max}
+                step={step}
+                value={parameters[key]}
+                onChange={handleChange(key)}
+                className="w-full slider-thumb bg-muted rounded-lg appearance-none h-2"
+                data-testid={testId}
+              />
+              <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                <span>{left}</span>
+                <span>{right}</span>
+              </div>
             </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-3 text-foreground">Building Density</label>
-            <input 
-              type="range" 
-              min="0.3" 
-              max="1.0" 
-              step="0.1" 
-              value={parameters.buildingDensity}
-              onChange={(e) => onParameterChange('buildingDensity', Number(e.target.value))}
-              className="w-full slider-thumb bg-muted rounded-lg appearance-none h-2" 
-              data-testid="slider-building-density"
-            />
-            <div className="flex justify-between text-xs text-muted-foreground mt-1">
-              <span>Sparse</span>
-              <span>Dense</span>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-3 text-foreground">Building Height</label>
-            <input 
-              type="range" 
-              min="20" 
-              max="150" 
-              value={parameters.buildingHeight}
-              onChange={(e) => onParameterChange('buildingHeight', Number(e.target.value))}
-              className="w-full slider-thumb bg-muted rounded-lg appearance-none h-2" 
-              data-testid="slider-building-height"
-            />
-            <div className="flex justify-between text-xs text-muted-foreground mt-1">
-              <span>Low</span>
-              <span>Skyscrapers</span>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-3 text-foreground">Street Width</label>
-            <input 
-              type="range" 
-              min="8" 
-              max="24" 
-              value={parameters.streetWidth}
-              onChange={(e) => onParameterChange('streetWidth', Number(e.target.value))}
-              className="w-full slider-thumb bg-muted rounded-lg appearance-none h-2" 
-              data-testid="slider-street-width"
-            />
-            <div className="flex justify-between text-xs text-muted-foreground mt-1">
-              <span>Narrow</span>
-              <span>Wide</span>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-3 text-foreground">Variation</label>
-            <input 
-              type="range" 
-              min="0" 
-              max="100" 
-              value={parameters.variation}
-              onChange={(e) => onParameterChange('variation', Number(e.target.value))}
-              className="w-full slider-thumb bg-muted rounded-lg appearance-none h-2" 
-              data-testid="slider-variation"
-            />
-            <div className="flex justify-between text-xs text-muted-foreground mt-1">
-              <span>Uniform</span>
-              <span>Chaotic</span>
-            </div>
-          </div>
+          ))}
         </div>
 
         {/* Style Presets */}
