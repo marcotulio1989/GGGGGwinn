@@ -4,6 +4,8 @@
 
 CityGen is an interactive web application that generates procedural 3D cities in real-time using HTML5 Canvas. Users can customize city parameters like size, building density, height variations, and street width through an intuitive interface. The application features smooth camera controls for panning and zooming, multiple city presets, and real-time rendering of complex urban environments.
 
+The project now relies entirely on a TypeScript-based React implementation, replacing the legacy standalone HTML build.
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
